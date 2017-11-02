@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< e6ddc275eda8cff5874266f7bec658c4aca88bf6
 # Canvas
 Let the community create works of art! In a world where everyone is online, yet seem less connected to each other than before, having a community mural would do a lot to tie the community together.
@@ -224,3 +225,8 @@ If you're not able to scan the QR code, make sure your phone's camera is focusin
 
 If this causes problems for you, you may want to try changing your terminal's color theme to have more contrast, or running Create React Native App from a different terminal. You can also manually enter the URL printed by the packager script in the Expo app's search bar to load it manually.
 >>>>>>> first commit
+=======
+# Canvas
+Let the community create works of art! In a world where everyone is online, yet seem less connected to each other than before, having a community mural would do a lot to tie the community together.
+Canvas is an online mural, tied to a geographic location, that changes as time goes on and to which anyone nearby can contribute. 
+>>>>>>> d1b77eed9f4d998e2fedc36a928b80348bc5fcdb
