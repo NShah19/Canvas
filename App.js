@@ -10,6 +10,8 @@ import { StackNavigator } from 'react-navigation'
 import Login from './login/login_screen'
 import RegisterForm from './login/login_form'
 import Home from './route/router'
+import Canvas from './displays/canvas'
+import Color from './displays/colors'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +

@@ -6,25 +6,29 @@ export default class Login extends Component {
   render() {
       return (
           <View style={styles.wrapper}>
-              <Button
-                onPress = {() => this.props.navigation.navigate('RegisterForm', {form: 'create'})}
-                color = "white"
-                title='Create an Account'
-                />
               <Image
                   style={styles.logo}
                   source={require('./canvas_logo.png')}
               />
-              <Button
-                onPress = {() => {}}
-                title = "Login"
-                color = 'white'
-                />
-              <Button
-                onPress = {() => {}}
-                title = "Logout"
-                color = 'white'
-                />
+              <View style={{flexDirection:'row'}} paddingTop={20}>
+                <Button
+                    onPress = {() =>  this.props.navigation.navigate('Info',{form: 'info'})}
+                    title = "Login"
+                    color = 'white'
+                    paddingTop = "10%"
+                    />
+                <Button
+                    onPress = {() => {}}
+                    title = "Logout"
+                    color = 'white'
+                    paddingTop = {100}
+                    />
+                </View>
+                <Button
+                    onPress = {() => this.props.navigation.navigate('RegisterForm', {form: 'create'})}
+                    color = "white"
+                    title='Create an Account'
+                    />
           </View>
       );
   }
@@ -40,10 +44,10 @@ const styles = StyleSheet.create({
     title: {
         color: 'white',
         fontSize: 35,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     logo: {
-        width: 300,
+        width: 250,
         height: 80
     },
 });

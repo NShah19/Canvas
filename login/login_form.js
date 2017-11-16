@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, View, TextInput, StyleSheet, Text, Modal, TouchableHighlight } from 'react-native';
+import { NavigationActions } from 'react-navigation'
 
 export default class RegisterForm extends Component {
 
@@ -7,7 +8,7 @@ export default class RegisterForm extends Component {
         super();
         
         this.info = {
-            name: "",
+            username: "",
             email: "",
             password: "",
             password_confirmation: "",
@@ -26,7 +27,7 @@ export default class RegisterForm extends Component {
             <TextInput
                 onChangeText={(val) => this.setState({name: val})}
                 style={styles.input}
-                placeholder="Full Name"
+                placeholder="Username"
             />
             <TextInput
                 onChangeText={(val) => this.setState({email: val})}
@@ -46,10 +47,14 @@ export default class RegisterForm extends Component {
                 secureTextEntry={true}
             />
             <Button 
-                //onPress={this.onCreatePress.bind(this)}
+                onPress = {() => this.props.navigation.dispatch(NavigationActions.back())}
+                //change onPress function later to also call the API to store the users
                 style={styles.input} 
                 title="Create"
             />
+            <Text style={styles.note}>
+                *Slide down to go back
+            </Text>
         </View>
         );
     }
@@ -69,6 +74,12 @@ const styles = StyleSheet.create({
       backgroundColor: '#F5FCFF',
       padding: 10,
       paddingTop: 80
+    },
+    note: {
+        color: 'black',
+        fontSize: 15,
+        fontWeight: 'bold',
+        padding: '10%'
     },
     input: {
       height: 50,
