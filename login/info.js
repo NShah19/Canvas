@@ -42,13 +42,13 @@ export default class Info extends Component {
                     style={styles.input}
                     secureTextEntry={true}
                 />
-                <Text style={styles.note}>
-                    *Slide down to go back
-                </Text>
                 <Button
                     onPress = {this.checkInput}
                     title="Continue"
                 />
+                <Text style={styles.note}>
+                    *Slide down to go back
+                </Text>
             </View>
         );
     }

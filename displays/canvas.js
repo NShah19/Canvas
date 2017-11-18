@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Button, Text, StyleSheet, View , TouchableHighlight } from 'react-native';
 import selectedColor from './colors'
 
+var count = 0; //count variable to assign unique ID
+
 export default class Canvas extends Component {
     /*<Button style={styles.buttonStyle}
                         title=""
@@ -11,11 +13,14 @@ export default class Canvas extends Component {
         super();
 
         this.state = {
-            color: selectedColor
+            backgroundColor: selectedColor,
+            i: Number,
+            j: Number
         }
+
     }
 //FIGURE OUT HOW TO UTILIZE GLOBAL VARIABLES
-
+    saveButton = (i, j) => {}
     render() {
 
         var buttons = [];
@@ -24,16 +29,18 @@ export default class Canvas extends Component {
         //Based on Geolocation, limit the pixels that you can select
         //Use the key values to remember (i and j) to remember which buttons were which colors
         //when storing in the database (relational databases)
+        //think about creating separate class for buttons so that each button has a unique ID
         for(let i = 0; i < 25; i++){
             buttons.push(
-                <View style={styles.square} key={i}>
+                <View style={styles.square} key={count}>
                     <TouchableHighlight style={styles.buttonStyle} 
                         onPress= {() =>  this.props.navigation.navigate('Color',{form: 'color'})}>
                         <Text>
                         </Text>
-                    </TouchableHighlight>
+                    </TouchableHighlight> 
                 </View>
             )
+            count++;
         }//Make buttons
         for(let j = 0; j < 25; j++){
             columns.push (
@@ -43,6 +50,7 @@ export default class Canvas extends Component {
             )
         }//Make columns
 //25 x 25 grid
+
         return (
             <View style={styles.wrapper}>
                 <Text style={styles.title}>

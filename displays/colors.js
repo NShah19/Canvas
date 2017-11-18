@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
-import { ColorPicker, toHsv } from 'react-native-color-picker';
+import { ColorPicker, toHsv, fromHsv} from 'react-native-color-picker';
 import { NavigationActions } from 'react-navigation'
 
 var selectedColor;
@@ -9,7 +9,9 @@ var selectedColor;
 export default class Color extends Component{
     constructor() {
         super();
-        this.state = { color: toHsv('green') }
+        this.state = { 
+            color: toHsv('white')
+        }//changes object to string
         this.onColorChange = this.onColorChange.bind(this)  
         this.onButtonPress = this.onButtonPress.bind(this)      
     }
@@ -20,6 +22,8 @@ export default class Color extends Component{
 
     onButtonPress = () => {
         this.props.navigation.dispatch(NavigationActions.back())
+        selectedColor = fromHsv(this.state.color);
+        alert(selectedColor);
     }
 
     render() {
