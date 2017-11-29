@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Text, StyleSheet, View , TouchableHighlight } from 'react-native';
+import CountdownCircle from 'react-native-countdown-circle'
 import selectedColor from './colors'
-
-var count = 0; //count variable to assign unique ID
 
 export default class Canvas extends Component {
     /*<Button style={styles.buttonStyle}
@@ -13,14 +12,20 @@ export default class Canvas extends Component {
         super();
 
         this.state = {
-            backgroundColor: selectedColor,
             i: Number,
             j: Number
         }
 
     }
 //FIGURE OUT HOW TO UTILIZE GLOBAL VARIABLES
-    saveButton = (i, j) => {}
+
+    changeButtonColor = () => {
+
+    }
+    saveButton = (i, j) => {
+        columns[i][j]
+    }
+
     render() {
 
         var buttons = [];
@@ -32,7 +37,7 @@ export default class Canvas extends Component {
         //think about creating separate class for buttons so that each button has a unique ID
         for(let i = 0; i < 25; i++){
             buttons.push(
-                <View style={styles.square} key={count}>
+                <View style={styles.square} key={i}>
                     <TouchableHighlight style={styles.buttonStyle} 
                         onPress= {() =>  this.props.navigation.navigate('Color',{form: 'color'})}>
                         <Text>
@@ -40,7 +45,6 @@ export default class Canvas extends Component {
                     </TouchableHighlight> 
                 </View>
             )
-            count++;
         }//Make buttons
         for(let j = 0; j < 25; j++){
             columns.push (
@@ -53,18 +57,29 @@ export default class Canvas extends Component {
 
         return (
             <View style={styles.wrapper}>
+                <View >
+                <CountdownCircle
+                    seconds={10}
+                    radius={30}
+                    borderWidth={8}
+                    color="#ff003f"
+                    bgColor="#fff"
+                    textStyle={{ fontSize: 15 }}
+                    //onTimeElapsed={() => alert('You may now select a color')}
+                />
+                </View>
                 <Text style={styles.title}>
                     Choose your Pixel!
                 </Text>
                 <View flexDirection='row'>
                     { columns }
                 </View>
-                <View padding = {20}>
+                <View padding = {20} flexDirection='row' alignItems='center'>
                 <Button
-                    title = "Back to Main Menu"
+                    alignItems='center'
+                    title = "Back to Main Menu     "
                     onPress = {() =>  this.props.navigation.navigate('Login',{form: 'login'})}
                     color = "white"
-                    
                 />
                 </View>
             </View>
@@ -72,7 +87,17 @@ export default class Canvas extends Component {
     }
 }
 
+
 const styles = StyleSheet.create({
+    buttonChange: {
+        backgroundColor: 'white',
+        width:14,
+        height:14,
+        borderWidth: 0.25,     
+        borderColor:'black', 
+        borderRadius: 1, 
+        borderStyle: 'solid' 
+    },
 
     square: {
         width: 14,
@@ -100,7 +125,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 35,
         fontWeight: 'bold',
-        padding: 50,
+        padding: 30,
         paddingLeft: 30,
         paddingRight: 30,
     },

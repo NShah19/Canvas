@@ -26,7 +26,6 @@ export default Home = StackNavigator({
     }
   }, 
   {
-    mode: 'modal',
     headerMode: 'none',
   });
 

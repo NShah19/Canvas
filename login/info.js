@@ -1,5 +1,5 @@
 import React, { Component }from 'react';
-import { Alert, Button, View, TextInput, StyleSheet, Text, Modal, TouchableHighlight } from 'react-native';
+import { Alert, Button, View, TextInput, StyleSheet, Text, TouchableHighlight } from 'react-native';
 import { NavigationActions } from 'react-navigation'
 
 export default class Info extends Component {

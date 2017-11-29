@@ -21,7 +21,8 @@ export default class Color extends Component{
     }
 
     onButtonPress = () => {
-        this.props.navigation.dispatch(NavigationActions.back())
+        //this.props.navigation.dispatch(NavigationActions.back())
+        this.props.navigation.navigate('Canvas',{form: 'canvas'})
         selectedColor = fromHsv(this.state.color);
         alert(selectedColor);
     }

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Canvas Backend Developments</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Password</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @canvas_backend_developments.each do |canvas_backend_development| %>
+      <tr>
+        <td><%= canvas_backend_development.username %></td>
+        <td><%= canvas_backend_development.password %></td>
+        <td><%= link_to 'Show', canvas_backend_development %></td>
+        <td><%= link_to 'Edit', edit_canvas_backend_development_path(canvas_backend_development) %></td>
+        <td><%= link_to 'Destroy', canvas_backend_development, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Canvas Backend Development', new_canvas_backend_development_path %>
