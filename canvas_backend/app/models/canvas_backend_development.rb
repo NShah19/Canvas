@@ -1,2 +1,0 @@
-class CanvasBackendDevelopment < ApplicationRecord
-end

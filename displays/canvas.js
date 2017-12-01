@@ -17,13 +17,34 @@ export default class Canvas extends Component {
         }
 
     }
-//FIGURE OUT HOW TO UTILIZE GLOBAL VARIABLES
-
-    changeButtonColor = () => {
-
+    //convert lat, long coordinates to an id to match the grid id in the database
+    //ex: if lat, long is 1200, 1200 then grid id = 1 and location = 'Bruin Bear'    
+    
+    //querying db every 10 seconds
+    async queryDB() {
+        try {
+            let response = await fetch('url', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    //
+                })
+            }
+        )
+        } catch(error){
+            alert(error);
+        }
     }
-    saveButton = (i, j) => {
-        columns[i][j]
+
+    setId= () => {
+        for(let i = 0; i < 25; i++){
+            for(let j = 0; j < 25; j++){
+                columns[i][j]
+            }
+        }
     }
 
     render() {

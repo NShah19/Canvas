@@ -1,1 +1,0 @@
-json.partial! "canvas_backend_developments/canvas_backend_development", canvas_backend_development: @canvas_backend_development
