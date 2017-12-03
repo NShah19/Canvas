@@ -4,6 +4,7 @@ import CountdownCircle from 'react-native-countdown-circle'
 import selectedColor from './colors'
 
 var location;
+var count;
 
 export default class Canvas extends Component {
     /*<Button style={styles.buttonStyle}
@@ -49,7 +50,10 @@ export default class Canvas extends Component {
         navigator.geolocation.clearWatch(this.watchId)
     }
     //componentDidMount method is called when the component is mounted
-    
+    /*
+    <Text>Latitude: {this.state.latitude}</Text>
+    <Text>Longitude: {this.state.longitude}</Text>
+    */
     //BRUIN BEAR (ID 1): 34.070988, -118.445003 to 34.071174, -118.445009
     //BOELTER HALL (ID): 34.069069, -118.442955 to 34.069714, -118.441966
     //SCULPTURE GARDEN (ID 3): 34.075118, -118.439990 to 34.075648 to -118.440761
@@ -84,9 +88,10 @@ export default class Canvas extends Component {
         }
     }
 
+    //move updateDB over to colors.js
     async updateDB(){
         try {
-            let response = await fetch('http://localhost:3000/grids',
+            let response = await fetch('http://164.67.207.154:3000/grids',
             {
                 method: 'POST',
                 headers: {
@@ -105,6 +110,19 @@ export default class Canvas extends Component {
         }
     }
 
+    timeup(){
+        count = true;
+    }
+
+    colorNavigate(){
+        if(count == false){
+            alert('Cannot select color yet');
+        }
+        else {
+            this.props.navigation.navigate('Color',{form: 'color'})
+        }
+    }
+
     setId= () => {
         for(let i = 0; i < 25; i++){
             for(let j = 0; j < 25; j++){
@@ -116,15 +134,16 @@ export default class Canvas extends Component {
     render() {
         if(this.state.latitude == 37.785834 && this.state.longitude == -122.406417){
             location = 'Bruin Bear' //Not actually bruin bear this is my room but 
-            //saying for testing purposes
+            //alert(location);//saying for testing purposes
         } //geolocation working
         var buttons = [];
         var columns = [];
+        count = false;
         for(let i = 0; i < 20; i++){
             buttons.push(
                 <View style={styles.square} key={i}>
                     <TouchableHighlight style={styles.buttonStyle} 
-                        onPress= {() =>  this.props.navigation.navigate('Color',{form: 'color'})}>
+                        onPress= {() => this.colorNavigate()}>
                         <Text>
                         </Text>
                     </TouchableHighlight> 
@@ -150,14 +169,12 @@ export default class Canvas extends Component {
                     color="#ff003f"
                     bgColor="#fff"
                     textStyle={{ fontSize: 15 }}
-                    //onTimeElapsed={() => alert('You may now select a color')}
+                    onTimeElapsed={() => this.timeup()}
                 />
                 </View>
                 <Text style={styles.title}>
                     Choose your Pixel!
                 </Text>
-                <Text>Latitude: {this.state.latitude}</Text>
-                <Text>Longitude: {this.state.longitude}</Text>
                 <View flexDirection='row'>
                     { columns }
                 </View>
