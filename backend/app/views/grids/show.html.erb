@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @grid.location %>
+</p>
+
+<p>
+  <strong>Colors[]:</strong>
+  <%= @grid.colors %>
+</p>
+
+<%= link_to 'Edit', edit_grid_path(@grid) %> |
+<%= link_to 'Back', grids_path %>

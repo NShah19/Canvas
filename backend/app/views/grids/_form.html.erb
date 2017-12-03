@@ -1,0 +1,27 @@
+<%= form_with(model: grid, local: true) do |form| %>
+  <% if grid.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(grid.errors.count, "error") %> prohibited this grid from being saved:</h2>
+
+      <ul>
+      <% grid.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :location %>
+    <%= form.text_area :location, id: :grid_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :colors %>
+    <%= form.text_area :colors, id: :grid_colors %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

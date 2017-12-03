@@ -3,6 +3,8 @@ import { Button, Text, StyleSheet, View , TouchableHighlight } from 'react-nativ
 import CountdownCircle from 'react-native-countdown-circle'
 import selectedColor from './colors'
 
+var location;
+
 export default class Canvas extends Component {
     /*<Button style={styles.buttonStyle}
                         title=""
@@ -12,28 +14,92 @@ export default class Canvas extends Component {
         super();
 
         this.state = {
-            i: Number,
-            j: Number
+            latitude: null,
+            longitude: null,
+            error: null,
+            colors: []
         }
 
     }
-    //convert lat, long coordinates to an id to match the grid id in the database
-    //ex: if lat, long is 1200, 1200 then grid id = 1 and location = 'Bruin Bear'    
+
+    componentDidMount() {
+        this.watchId = navigator.geolocation.watchPosition(
+            (position) =>{
+                this.setState({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    error: null,
+                });
+                //alert(this.state.latitude + "," + this.state.longitude)
+
+            },
+            (error) => this.setState({
+                error: error.message
+            }),
+            {
+                enableHighAccuracy: true,
+                timeout: 30000,
+                maximumAge: 1000, 
+                distanceFilter: 3,           
+            },
+        );
+    }
+    
+    componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchId)
+    }
+    //componentDidMount method is called when the component is mounted
+    
+    //BRUIN BEAR (ID 1): 34.070957, -118.444994
+    //BOELTER HALL (ID 2): Decimal Degrees: Latitude: 34.0686201 Longitude: -118.4428575
+    //SCULPTURE GARDEN (ID 3): DROP A PIN LATER
+    //SPROUL HALL (ID 4): DROP A PIN LATER
+    //JANSS STEPS (ID 5): 34.072397, -118.443168
+
+    //Get the coords and set a string (like Bruin Bear) based on the results of the current location
+    //then send the string over to the backend 
+    
+    //make db query of that specific location and return the colors  
     
     //querying db every 10 seconds
     async queryDB() {
         try {
-            let response = await fetch('url', {
+            let response = await fetch('http://localhost:3000/grids', 
+                //deploy backend to heroku and call get URL  
+                {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    //
-                })
+                body: JSON.stringify(location)
             }
         )
+        let responseJson = await response.json();
+        this.setState({
+            colors: responseJson
+        }) 
+        } catch(error){
+            alert(error);
+        }
+    }
+
+    async updateDB(){
+        try {
+            let response = await fetch('http://localhost:3000/grids',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(this.state.colors)
+            }
+        )
+        let res = await response.json();
+        this.setState({
+            colors: res
+        })
         } catch(error){
             alert(error);
         }
@@ -48,15 +114,14 @@ export default class Canvas extends Component {
     }
 
     render() {
-
+        //test
+        /*if(this.state.latitude == 37.785834 && this.state.longitude == -122.406417){
+            location = 'Bruin Bear' //Not actually bruin bear this is my room but 
+            //saying for testing purposes
+        }*/ //geolocation working
         var buttons = [];
         var columns = [];
-        //FEATURE TO ADD LATER
-        //Based on Geolocation, limit the pixels that you can select
-        //Use the key values to remember (i and j) to remember which buttons were which colors
-        //when storing in the database (relational databases)
-        //think about creating separate class for buttons so that each button has a unique ID
-        for(let i = 0; i < 25; i++){
+        for(let i = 0; i < 20; i++){
             buttons.push(
                 <View style={styles.square} key={i}>
                     <TouchableHighlight style={styles.buttonStyle} 
@@ -67,7 +132,7 @@ export default class Canvas extends Component {
                 </View>
             )
         }//Make buttons
-        for(let j = 0; j < 25; j++){
+        for(let j = 0; j < 20; j++){
             columns.push (
                 <View flexDirection='column' key={j}>
                     { buttons }
@@ -92,6 +157,8 @@ export default class Canvas extends Component {
                 <Text style={styles.title}>
                     Choose your Pixel!
                 </Text>
+                <Text>Latitude: {this.state.latitude}</Text>
+                <Text>Longitude: {this.state.longitude}</Text>
                 <View flexDirection='row'>
                     { columns }
                 </View>
@@ -100,6 +167,11 @@ export default class Canvas extends Component {
                     alignItems='center'
                     title = "Back to Main Menu     "
                     onPress = {() =>  this.props.navigation.navigate('Login',{form: 'login'})}
+                    color = "white"
+                />
+                <Button
+                    title = "Refresh"
+                    onPress = {() => this.queryDB()}
                     color = "white"
                 />
                 </View>
