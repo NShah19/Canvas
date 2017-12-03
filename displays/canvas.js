@@ -50,11 +50,11 @@ export default class Canvas extends Component {
     }
     //componentDidMount method is called when the component is mounted
     
-    //BRUIN BEAR (ID 1): 34.070957, -118.444994
-    //BOELTER HALL (ID 2): Decimal Degrees: Latitude: 34.0686201 Longitude: -118.4428575
-    //SCULPTURE GARDEN (ID 3): DROP A PIN LATER
-    //SPROUL HALL (ID 4): DROP A PIN LATER
-    //JANSS STEPS (ID 5): 34.072397, -118.443168
+    //BRUIN BEAR (ID 1): 34.070988, -118.445003 to 34.071174, -118.445009
+    //BOELTER HALL (ID): 34.069069, -118.442955 to 34.069714, -118.441966
+    //SCULPTURE GARDEN (ID 3): 34.075118, -118.439990 to 34.075648 to -118.440761
+    //SPROUL HALL (ID 4): 34.072153, -118.449949 to 34/071781, -118.450281 
+    //JANSS STEPS (ID 5): 34.072169, -118.443119 to 34.072171, -118.443722
 
     //Get the coords and set a string (like Bruin Bear) based on the results of the current location
     //then send the string over to the backend 
@@ -114,11 +114,10 @@ export default class Canvas extends Component {
     }
 
     render() {
-        //test
-        /*if(this.state.latitude == 37.785834 && this.state.longitude == -122.406417){
+        if(this.state.latitude == 37.785834 && this.state.longitude == -122.406417){
             location = 'Bruin Bear' //Not actually bruin bear this is my room but 
             //saying for testing purposes
-        }*/ //geolocation working
+        } //geolocation working
         var buttons = [];
         var columns = [];
         for(let i = 0; i < 20; i++){
