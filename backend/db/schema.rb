@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 20171202011422) do
   create_table "grids", force: :cascade do |t|
     t.text "location"
     t.text "colors", default: [], array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

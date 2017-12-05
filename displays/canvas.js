@@ -3,8 +3,14 @@ import { Button, Text, StyleSheet, View , TouchableHighlight } from 'react-nativ
 import CountdownCircle from 'react-native-countdown-circle'
 import selectedColor from './colors'
 
-var location;
-var count;
+var location = "Out of Range";
+
+function isWithinRadius(x1, y1, x2, y2, r){
+    var distance = Math.hypot((x2 - x1), (y2 - y1));
+    if (distance <= r)
+        return true;
+    return false;
+}
 
 export default class Canvas extends Component {
     /*<Button style={styles.buttonStyle}
@@ -18,12 +24,18 @@ export default class Canvas extends Component {
             latitude: null,
             longitude: null,
             error: null,
-            colors: []
+            colors: [],
+            bruinBear: {latitude: 34.070988, longitude: -118.445003, radius: 0.000186097},
+            boelter: {latitude: 34.069069, longitude: -118.442955, radius: 0.00127966},
+            sculptureGarden: {latitude: 34.075118, longitude: -118.439990, radius: 0.000935597},
+            sproulHall: {latitude: 34.072153, longitude: -118.449949, radius: 0.000498606},
+            janssSteps: {latitude: 34.072169, longitude: -118.443119, radius: 0.000603003}
         }
 
     }
+    
 
-    componentDidMount() {
+    componentWillMount() {
         this.watchId = navigator.geolocation.watchPosition(
             (position) =>{
                 this.setState({
@@ -44,20 +56,27 @@ export default class Canvas extends Component {
                 distanceFilter: 3,           
             },
         );
+        if(isWithinRadius(latitude, longitude, bruinBear.latitude, bruinBear.longitude, bruinBear.radius))
+            location = "Bruin Bear";
+        else if (isWithinRadius(latitude, longitude, boelter.latitude, boelter.longitude, boelter.radius))
+            location = "Boelter";
+        else if (isWithinRadius(latitude,longitude, sculptureGarden.latitude, sculptureGarden.longitude, sculptureGarden.radius))
+            location = "Sculpture Garden";
+        else if(isWithinRadius(latitude, longitude, sproulHall.latitude, sproulHall.longitude, sproulHall.radius))
+            location = "Sproul Hall";
+        else if(isWithinRadius(latitude, longitude, janssSteps.latitude, janssSteps.longitude, janssSteps.radius))
+            location = "Janss Steps";
     }
     
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchId)
     }
     //componentDidMount method is called when the component is mounted
-    /*
-    <Text>Latitude: {this.state.latitude}</Text>
-    <Text>Longitude: {this.state.longitude}</Text>
-    */
+    
     //BRUIN BEAR (ID 1): 34.070988, -118.445003 to 34.071174, -118.445009
-    //BOELTER HALL (ID): 34.069069, -118.442955 to 34.069714, -118.441966
-    //SCULPTURE GARDEN (ID 3): 34.075118, -118.439990 to 34.075648 to -118.440761
-    //SPROUL HALL (ID 4): 34.072153, -118.449949 to 34/071781, -118.450281 
+    //BOELTER HALL (ID 2): 34.069069, -118.442955 to 34.069809, -118.441911
+    //SCULPTURE GARDEN (ID 3): 34.075118, -118.439990 to 34.075648, -118.440761
+    //SPROUL HALL (ID 4): 34.072153, -118.449949 to 34.071781, -118.450281 
     //JANSS STEPS (ID 5): 34.072169, -118.443119 to 34.072171, -118.443722
 
     //Get the coords and set a string (like Bruin Bear) based on the results of the current location
@@ -88,41 +107,6 @@ export default class Canvas extends Component {
         }
     }
 
-    //move updateDB over to colors.js
-    async updateDB(){
-        try {
-            let response = await fetch('http://164.67.207.154:3000/grids',
-            {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(this.state.colors)
-            }
-        )
-        let res = await response.json();
-        this.setState({
-            colors: res
-        })
-        } catch(error){
-            alert(error);
-        }
-    }
-
-    timeup(){
-        count = true;
-    }
-
-    colorNavigate(){
-        if(count == false){
-            alert('Cannot select color yet');
-        }
-        else {
-            this.props.navigation.navigate('Color',{form: 'color'})
-        }
-    }
-
     setId= () => {
         for(let i = 0; i < 25; i++){
             for(let j = 0; j < 25; j++){
@@ -134,16 +118,15 @@ export default class Canvas extends Component {
     render() {
         if(this.state.latitude == 37.785834 && this.state.longitude == -122.406417){
             location = 'Bruin Bear' //Not actually bruin bear this is my room but 
-            //alert(location);//saying for testing purposes
+            //saying for testing purposes
         } //geolocation working
         var buttons = [];
         var columns = [];
-        count = false;
         for(let i = 0; i < 20; i++){
             buttons.push(
                 <View style={styles.square} key={i}>
                     <TouchableHighlight style={styles.buttonStyle} 
-                        onPress= {() => this.colorNavigate()}>
+                        onPress= {() =>  this.props.navigation.navigate('Color',{form: 'color'})}>
                         <Text>
                         </Text>
                     </TouchableHighlight> 
@@ -169,12 +152,14 @@ export default class Canvas extends Component {
                     color="#ff003f"
                     bgColor="#fff"
                     textStyle={{ fontSize: 15 }}
-                    onTimeElapsed={() => this.timeup()}
+                    //onTimeElapsed={() => alert('You may now select a color')}
                 />
                 </View>
                 <Text style={styles.title}>
                     Choose your Pixel!
                 </Text>
+                <Text>Latitude: {this.state.latitude}</Text>
+                <Text>Longitude: {this.state.longitude}</Text>
                 <View flexDirection='row'>
                     { columns }
                 </View>

@@ -7,6 +7,7 @@ var selectedColor;
 
 
 export default class Color extends Component{
+    index = (this.props.navigation.state.params.row * 20) + this.props.navigation.state.params.col;
     constructor() {
         super();
         this.state = { 
@@ -25,6 +26,27 @@ export default class Color extends Component{
         this.props.navigation.navigate('Canvas',{form: 'canvas'})
         selectedColor = fromHsv(this.state.color);
         alert(selectedColor);
+    }
+
+    async updateDB(){
+        try {
+            let response = await fetch('http://localhost:3000/grids',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({firstParam: location, secondParam: index, thirdParam: this.state.color})
+            }
+        )
+        let res = await response.json();
+        this.setState({
+            colors: res
+        })
+        } catch(error){
+            alert(error);
+        }
     }
 
     render() {
