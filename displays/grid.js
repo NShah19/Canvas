@@ -4,61 +4,11 @@ import CountdownCircle from 'react-native-countdown-circle'
 import selectedColor from './colors'
 import { fromHsv, toHsv } from 'react-native-color-picker'
 import { timer } from 'react-timer-hoc'
-import Grid from './grid'
 
 var location;
 var count;
 
-class CountdownTimer extends Component {}
-export default class Canvas extends Component {
-    /*<Button style={styles.buttonStyle}
-                        title=""
-                    />
-                    */
-    constructor() {
-        super();
-
-        this.state = {
-            latitude: null,
-            longitude: null,
-            error: null,
-            colors: []
-        }
-    }
-
-
-    componentDidMount() {
-        //before component mounts we would wanna set the color as well
-        this.watchId = navigator.geolocation.watchPosition(
-            (position) =>{
-                this.setState({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    error: null,
-                });
-                //alert(this.state.latitude + "," + this.state.longitude)
-
-            },
-            (error) => this.setState({
-                error: error.message
-            }),
-            {
-                enableHighAccuracy: true,
-                timeout: 30000,
-                maximumAge: 1000, 
-                distanceFilter: 3,           
-            },
-        );
-    }
-    
-    componentWillUnmount() {
-        navigator.geolocation.clearWatch(this.watchId)
-    }
-    /*
-    <Text>Latitude: {this.state.latitude}</Text>
-    <Text>Longitude: {this.state.longitude}</Text>
-    */
-
+export class Grid extends Component {
     timeup(){
         count = true;
     }
@@ -68,7 +18,7 @@ export default class Canvas extends Component {
             let response = await fetch('https://arcane-woodland-58063.herokuapp.com/grids', 
                 //deploy backend to heroku and call get URL  
                 {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -153,7 +103,6 @@ export default class Canvas extends Component {
         )
     }
 }
-
 
 const styles = StyleSheet.create({
     buttonChange: {

@@ -5,6 +5,7 @@ import Login from '../login/login_screen';
 import Info from '../login/info';
 import Canvas from '../displays/canvas'
 import Color from '../displays/colors'
+
 export default Home = StackNavigator({
     Login: {
       screen: Login,
@@ -23,7 +24,8 @@ export default Home = StackNavigator({
     },
     Color: {
       screen: Color,
-    }
+    },
+
   }, 
   {
     headerMode: 'none',
