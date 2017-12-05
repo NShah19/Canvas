@@ -25,7 +25,6 @@ class GridsController < ApplicationController
   # POST /grids.json
   def create
     @grid = Grid.new(grid_params)
-
     respond_to do |format|
       if @grid.save
         format.html { redirect_to @grid, notice: 'Grid was successfully created.' }
@@ -34,6 +33,9 @@ class GridsController < ApplicationController
         format.html { render :new }
         format.json { render json: @grid.errors, status: :unprocessable_entity }
       end
+      # add something here to process info and send it back
+      # use the render function
+      #render text: "Test alert", status: 200
     end
   end
 

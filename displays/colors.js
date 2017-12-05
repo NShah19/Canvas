@@ -10,7 +10,8 @@ export default class Color extends Component{
     constructor() {
         super();
         this.state = { 
-            color: toHsv('white')
+            color: toHsv('white'),
+            colors: []
         }//changes object to string
         this.onColorChange = this.onColorChange.bind(this)  
         this.onButtonPress = this.onButtonPress.bind(this)      
@@ -18,6 +19,28 @@ export default class Color extends Component{
     
     onColorChange(color){
         this.setState({color})
+    }
+
+    //move updateDB over to colors.js
+    async updateDB(){
+        try {
+            let response = await fetch('http://164.67.207.154:3000/grids',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(this.state.colors)
+            }
+        )
+        let res = await response.json();
+        this.setState({
+            colors: res
+        })
+        } catch(error){
+            alert(error);
+        }
     }
 
     onButtonPress = () => {

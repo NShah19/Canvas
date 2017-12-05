@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Button, Text, StyleSheet, View , TouchableHighlight } from 'react-native';
 import CountdownCircle from 'react-native-countdown-circle'
 import selectedColor from './colors'
+import { fromHsv, toHsv } from 'react-native-color-picker'
+import { timer } from 'react-timer-hoc'
 
 var location;
 var count;
@@ -20,10 +22,10 @@ export default class Canvas extends Component {
             error: null,
             colors: []
         }
-
     }
 
     componentDidMount() {
+        //before component mounts we would wanna set the color as well
         this.watchId = navigator.geolocation.watchPosition(
             (position) =>{
                 this.setState({
@@ -68,7 +70,7 @@ export default class Canvas extends Component {
     //querying db every 10 seconds
     async queryDB() {
         try {
-            let response = await fetch('http://localhost:3000/grids', 
+            let response = await fetch('https://arcane-woodland-58063.herokuapp.com/grids', 
                 //deploy backend to heroku and call get URL  
                 {
                 method: 'POST',
@@ -79,32 +81,12 @@ export default class Canvas extends Component {
                 body: JSON.stringify(location)
             }
         )
-        let responseJson = await response.json();
+        let responseJson = await response.text();
+        alert(responseJson)
         this.setState({
             colors: responseJson
         }) 
-        } catch(error){
-            alert(error);
-        }
-    }
-
-    //move updateDB over to colors.js
-    async updateDB(){
-        try {
-            let response = await fetch('http://164.67.207.154:3000/grids',
-            {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(this.state.colors)
-            }
-        )
-        let res = await response.json();
-        this.setState({
-            colors: res
-        })
+        alert(responseJson)
         } catch(error){
             alert(error);
         }
