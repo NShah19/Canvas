@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import { Button, Text, StyleSheet, View , TouchableHighlight } from 'react-native';
 import CountdownCircle from 'react-native-countdown-circle'
 import selectedColor from './colors'
-import { fromHsv, toHsv } from 'react-native-color-picker'
-import { timer } from 'react-timer-hoc'
 
-var location;
-var count;
+var location = "Out of Range";
+
+function isWithinRadius(x1, y1, x2, y2, r){
+    var distance = Math.hypot((x2 - x1), (y2 - y1));
+    if (distance <= r)
+        return true;
+    return false;
+}
 
 export default class Canvas extends Component {
     /*<Button style={styles.buttonStyle}
@@ -20,12 +24,18 @@ export default class Canvas extends Component {
             latitude: null,
             longitude: null,
             error: null,
-            colors: []
+            colors: [],
+            bruinBear: {latitude: 34.070988, longitude: -118.445003, radius: 0.000186097},
+            boelter: {latitude: 34.069069, longitude: -118.442955, radius: 0.00127966},
+            sculptureGarden: {latitude: 34.075118, longitude: -118.439990, radius: 0.000935597},
+            sproulHall: {latitude: 34.072153, longitude: -118.449949, radius: 0.000498606},
+            janssSteps: {latitude: 34.072169, longitude: -118.443119, radius: 0.000603003}
         }
-    }
 
-    componentDidMount() {
-        //before component mounts we would wanna set the color as well
+    }
+    
+
+    componentWillMount() {
         this.watchId = navigator.geolocation.watchPosition(
             (position) =>{
                 this.setState({
@@ -46,20 +56,27 @@ export default class Canvas extends Component {
                 distanceFilter: 3,           
             },
         );
+        if(isWithinRadius(latitude, longitude, bruinBear.latitude, bruinBear.longitude, bruinBear.radius))
+            location = "Bruin Bear";
+        else if (isWithinRadius(latitude, longitude, boelter.latitude, boelter.longitude, boelter.radius))
+            location = "Boelter";
+        else if (isWithinRadius(latitude,longitude, sculptureGarden.latitude, sculptureGarden.longitude, sculptureGarden.radius))
+            location = "Sculpture Garden";
+        else if(isWithinRadius(latitude, longitude, sproulHall.latitude, sproulHall.longitude, sproulHall.radius))
+            location = "Sproul Hall";
+        else if(isWithinRadius(latitude, longitude, janssSteps.latitude, janssSteps.longitude, janssSteps.radius))
+            location = "Janss Steps";
     }
     
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchId)
     }
     //componentDidMount method is called when the component is mounted
-    /*
-    <Text>Latitude: {this.state.latitude}</Text>
-    <Text>Longitude: {this.state.longitude}</Text>
-    */
+    
     //BRUIN BEAR (ID 1): 34.070988, -118.445003 to 34.071174, -118.445009
-    //BOELTER HALL (ID): 34.069069, -118.442955 to 34.069714, -118.441966
-    //SCULPTURE GARDEN (ID 3): 34.075118, -118.439990 to 34.075648 to -118.440761
-    //SPROUL HALL (ID 4): 34.072153, -118.449949 to 34/071781, -118.450281 
+    //BOELTER HALL (ID 2): 34.069069, -118.442955 to 34.069809, -118.441911
+    //SCULPTURE GARDEN (ID 3): 34.075118, -118.439990 to 34.075648, -118.440761
+    //SPROUL HALL (ID 4): 34.072153, -118.449949 to 34.071781, -118.450281 
     //JANSS STEPS (ID 5): 34.072169, -118.443119 to 34.072171, -118.443722
 
     //Get the coords and set a string (like Bruin Bear) based on the results of the current location
@@ -70,7 +87,7 @@ export default class Canvas extends Component {
     //querying db every 10 seconds
     async queryDB() {
         try {
-            let response = await fetch('https://arcane-woodland-58063.herokuapp.com/grids', 
+            let response = await fetch('http://localhost:3000/grids', 
                 //deploy backend to heroku and call get URL  
                 {
                 method: 'POST',
@@ -81,27 +98,12 @@ export default class Canvas extends Component {
                 body: JSON.stringify(location)
             }
         )
-        let responseJson = await response.text();
-        alert(responseJson)
+        let responseJson = await response.json();
         this.setState({
             colors: responseJson
         }) 
-        alert(responseJson)
         } catch(error){
             alert(error);
-        }
-    }
-
-    timeup(){
-        count = true;
-    }
-
-    colorNavigate(){
-        if(count == false){
-            alert('Cannot select color yet');
-        }
-        else {
-            this.props.navigation.navigate('Color',{form: 'color'})
         }
     }
 
@@ -116,16 +118,15 @@ export default class Canvas extends Component {
     render() {
         if(this.state.latitude == 37.785834 && this.state.longitude == -122.406417){
             location = 'Bruin Bear' //Not actually bruin bear this is my room but 
-            //alert(location);//saying for testing purposes
+            //saying for testing purposes
         } //geolocation working
         var buttons = [];
         var columns = [];
-        count = false;
         for(let i = 0; i < 20; i++){
             buttons.push(
                 <View style={styles.square} key={i}>
                     <TouchableHighlight style={styles.buttonStyle} 
-                        onPress= {() => this.colorNavigate()}>
+                        onPress= {() =>  this.props.navigation.navigate('Color',{form: 'color'})}>
                         <Text>
                         </Text>
                     </TouchableHighlight> 
@@ -151,12 +152,14 @@ export default class Canvas extends Component {
                     color="#ff003f"
                     bgColor="#fff"
                     textStyle={{ fontSize: 15 }}
-                    onTimeElapsed={() => this.timeup()}
+                    //onTimeElapsed={() => alert('You may now select a color')}
                 />
                 </View>
                 <Text style={styles.title}>
                     Choose your Pixel!
                 </Text>
+                <Text>Latitude: {this.state.latitude}</Text>
+                <Text>Longitude: {this.state.longitude}</Text>
                 <View flexDirection='row'>
                     { columns }
                 </View>
