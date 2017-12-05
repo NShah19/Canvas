@@ -89,14 +89,14 @@ export default class Canvas extends Component {
 
     async queryDB() {
         try {
-            //let response = await fetch('https://localhost:3000/grids/lookup/BruinBear.json', 
+            let response = await fetch('https://localhost:3000/grids/lookup/BruinBear.json', 
                 //deploy backend to heroku and call get URL  
                 {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                },
+                }
                 //body: JSON.stringify(location)
             }
         )

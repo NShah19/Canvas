@@ -1,12 +1,14 @@
 class GridsController < ApplicationController
   before_action :set_grid, only: [:show, :edit, :update, :destroy]
 
-  #GET /grids/lookup/:locationName
-  #GET /grids/lookup/:locationName.json
+  #GET /grids/lookup/:location
+  #GET /grids/lookup/:location.json
   def lookup
-    @grid = Grid.find_by(location : locationName)
-    format.html 
-    format.json {render json: @grid.colors, status: :ok, location: @grid }
+    respond_to do |format|
+      @grid = Grid.find_by_location(params[:location])
+      #format.html 
+      format.json {render json: @grid, status: :ok, location: @grid }
+    end
   end
 
   #PUT /grids/colorupdate/:color

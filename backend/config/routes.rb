@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get '/grids/lookup/:locationName', to: 'grids#lookup'
+  get '/grids/lookup/:location', to: 'grids#lookup'
   put '/grids/colorupdate/:color', to: 'grids#colorupdate'
   resources :grids
   # add another route here for 

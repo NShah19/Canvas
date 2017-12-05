@@ -5,6 +5,7 @@ import { NavigationActions } from 'react-navigation'
 
 var selectedColor;
 
+//separate hsv values by slashes
 
 export default class Color extends Component{
     index = (this.props.navigation.state.params.row * 20) + this.props.navigation.state.params.col;
@@ -25,7 +26,8 @@ export default class Color extends Component{
         //this.props.navigation.dispatch(NavigationActions.back())
         this.props.navigation.navigate('Canvas',{form: 'canvas'})
         selectedColor = fromHsv(this.state.color);
-        alert(selectedColor);
+        //alert(selectedColor);
+        alert(toHsv('white'))        
     }
 
     async updateDB(){
