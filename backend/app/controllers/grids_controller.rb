@@ -4,7 +4,8 @@ class GridsController < ApplicationController
   #GET /grids/lookup/:locationName
   #GET /grids/lookup/:locationName.json
   def lookup
-    @grid = Grid.find(params[:locationName])
+    @grid = Grid.find_by(location : locationName)
+    format.html 
     format.json {render json: @grid.colors, status: :ok, location: @grid }
   end
 
