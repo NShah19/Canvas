@@ -10,6 +10,8 @@ class GridsController < ApplicationController
   # GET /grids/1
   # GET /grids/1.json
   def show
+    @grid = Grid.find(params[:id])
+    @colors = @grid.name
   end
 
   # GET /grids/new
