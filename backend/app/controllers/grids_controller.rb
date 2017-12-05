@@ -6,22 +6,25 @@ class GridsController < ApplicationController
   def lookup
     respond_to do |format|
       @grid = Grid.find_by_location(params[:location])
-      #format.html 
-      format.json {render json: @grid, status: :ok, location: @grid }
+      format.json {render json: @grid.colors, status: :ok, location: @grid }
     end
   end
 
-  #PUT /grids/colorupdate/:color
-  #PUT /grids/colorupdate/:color.json
+  #POST /grids/colorupdate
+  #POST /grids/colorupdate.json
   def colorupdate
       respond_to do |format|
-      if @grid.update(grid_params)
-        format.html { redirect_to @grid, notice: 'Grid was successfully updated.' }
-        format.json { render json: @grid.colors, status: :ok, location: @grid }
-      else
-        format.html { render :edit }
-        format.json { render json: @grid.errors, status: :unprocessable_entity }
-      end
+          @location = params[:firstParam]
+          @index = params[:secondParam]
+          @color = params[:thirdParam]
+          @grid = Grid.find_by_location(params[@location])
+          @newColorArray = @grid.colors
+          @newColorArray[@index] = @color
+          
+          @grid.colors = @newColorArray
+          save
+          
+          format.json {render json: @grid.colors, status: :ok, location: @grid}
     end
   end
   
