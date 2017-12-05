@@ -1,6 +1,27 @@
 class GridsController < ApplicationController
   before_action :set_grid, only: [:show, :edit, :update, :destroy]
 
+  #GET /grids/lookup/:locationName
+  #GET /grids/lookup/:locationName.json
+  def lookup
+    @grid = Grid.find(params[:locationName])
+    format.json {render json: @grid.colors, status: :ok, location: @grid }
+  end
+
+  #PUT /grids/colorupdate/:color
+  #PUT /grids/colorupdate/:color.json
+  def colorupdate
+      respond_to do |format|
+      if @grid.update(grid_params)
+        format.html { redirect_to @grid, notice: 'Grid was successfully updated.' }
+        format.json { render json: @grid.colors, status: :ok, location: @grid }
+      else
+        format.html { render :edit }
+        format.json { render json: @grid.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  
   # GET /grids
   # GET /grids.json
   def index
@@ -11,7 +32,7 @@ class GridsController < ApplicationController
   # GET /grids/1.json
   def show
     @grid = Grid.find(params[:id])
-    @colors = @grid.name
+    @colors = @grid.colors
   end
 
   # GET /grids/new
@@ -21,6 +42,7 @@ class GridsController < ApplicationController
 
   # GET /grids/1/edit
   def edit
+    @grid = Grid.find(params[:id])
   end
 
   # POST /grids
