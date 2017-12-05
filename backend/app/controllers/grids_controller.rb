@@ -7,7 +7,7 @@ class GridsController < ApplicationController
     respond_to do |format|
       @grid = Grid.find_by_location(params[:location])
       #format.html 
-      format.json {render json: @grid, status: :ok, location: @grid }
+      format.json {render json: @grid.colors, status: :ok, location: @grid }
     end
   end
 

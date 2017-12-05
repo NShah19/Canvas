@@ -5,9 +5,11 @@ import selectedColor from './colors'
 import { fromHsv, toHsv } from 'react-native-color-picker'
 import { timer } from 'react-timer-hoc'
 import Grid from './grid'
+import colorChange from './grid'
 
 
 var location = "Out of Range";
+var count;
 
 function isWithinRadius(x1, y1, x2, y2, r){
     var distance = Math.hypot((x2 - x1), (y2 - y1));
@@ -89,7 +91,7 @@ export default class Canvas extends Component {
 
     async queryDB() {
         try {
-            let response = await fetch('https://localhost:3000/grids/lookup/BruinBear.json', 
+            let response = await fetch('http://169.232.244.139:3000/grids/lookup/BruinBear.json', 
                 //deploy backend to heroku and call get URL  
                 {
                 method: 'GET',
@@ -109,14 +111,15 @@ export default class Canvas extends Component {
             alert(error);
         }
     }
-    colorNavigate(){
+
+    /*colorNavigate(){
         if(count == false){
             alert('Cannot select color yet');
         }
         else {
             this.props.navigation.navigate('Color',{form: 'color'})
         }
-    }
+    }*/
 
     setId= () => {
         for(let i = 0; i < 25; i++){
@@ -127,21 +130,20 @@ export default class Canvas extends Component {
     }
 
     render() {
-        if(this.state.latitude == 37.785834 && this.state.longitude == -122.406417){
-            location = 'Bruin Bear' //Not actually bruin bear this is my room but 
-            //saying for testing purposes
-        } //geolocation working
+        count = false;
         var buttons = [];
         var columns = [];
         for(let i = 0; i < 20; i++){
             buttons.push(
-                <View style={styles.square} key={i}>
+               /* <View style={styles.square} key={i}>
                     <TouchableHighlight style={styles.buttonStyle} 
-                        onPress= {() =>  this.props.navigation.navigate('Color',{form: 'color'})}>
+                        onPress= {() =>  this.colorNavigate()}>
                         <Text>
                         </Text>
                     </TouchableHighlight> 
-                </View>
+                </View>*/
+                <Grid key ={i} navigation={this.props.navigation}
+                />
             )
         }//Make buttons
         for(let j = 0; j < 20; j++){
@@ -155,13 +157,13 @@ export default class Canvas extends Component {
             <View style={styles.wrapper}>
                 <View >
                 <CountdownCircle
-                    seconds={2}
+                    seconds={10}
                     radius={30}
                     borderWidth={8}
                     color="#ff003f"
                     bgColor="#fff"
                     textStyle={{ fontSize: 15 }}
-                    //onTimeElapsed={() => alert('You may now select a color')}
+                    onTimeElapsed={() => this.timeup()}
                 />
                 </View>
                 <Text style={styles.title}>
@@ -193,7 +195,7 @@ export default class Canvas extends Component {
 
 const styles = StyleSheet.create({
     buttonChange: {
-        backgroundColor: 'white',
+        //backgroundColor: 'white',
         width:14,
         height:14,
         borderWidth: 0.25,     
@@ -201,7 +203,6 @@ const styles = StyleSheet.create({
         borderRadius: 1, 
         borderStyle: 'solid' 
     },
-
     square: {
         width: 14,
         height: 14,
@@ -237,3 +238,4 @@ const styles = StyleSheet.create({
         height: 80
     },
 });
+export {count} ; 

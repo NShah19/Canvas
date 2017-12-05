@@ -3,12 +3,13 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 import { ColorPicker, toHsv, fromHsv} from 'react-native-color-picker';
 import { NavigationActions } from 'react-navigation'
 
+
 var selectedColor;
 
 //separate hsv values by slashes
 
 export default class Color extends Component{
-    index = (this.props.navigation.state.params.row * 20) + this.props.navigation.state.params.col;
+    //index = (this.props.navigation.state.params.row * 20) + this.props.navigation.state.params.col;
     constructor() {
         super();
         this.state = { 
@@ -26,8 +27,8 @@ export default class Color extends Component{
         //this.props.navigation.dispatch(NavigationActions.back())
         this.props.navigation.navigate('Canvas',{form: 'canvas'})
         selectedColor = fromHsv(this.state.color);
-        //alert(selectedColor);
-        alert(toHsv('white'))        
+        alert(selectedColor);
+        //alert(toHsv('white'))        
     }
 
     async updateDB(){
@@ -83,3 +84,4 @@ const styles = StyleSheet.create( {
 })
 
 export {selectedColor} ;
+
