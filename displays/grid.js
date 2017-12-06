@@ -9,23 +9,22 @@ export default class Grid extends Component {
     constructor(props){
         super(props);
         this.state = {
-            color: 'white',
+            currColor: props.color,
             id: props.id
         }
     }
 
     colorNav(e) {
-        //alert("Row/Column/Index: " + row + "/" + col + "/" + index)
 
         if(count == false){
             alert('Cannot select color yet');
         } else{
-            alert(this.state.id)
+            alert("This is this pixel's color: " + this.state.currColor);
             this.props.navigation.navigate('Color', {form: 'color', index: this.state.id})
-        this.setState ({
+        /*this.setState ({
             color: selectedColor
-        }) 
-            //alert(selectedColor)
+        }) */
+            index = this.state.id
         }
     }
 
@@ -36,8 +35,8 @@ export default class Grid extends Component {
 
     render() {
         return(
-            <View style={square_style(this.color)} key={this.index}>
-                <TouchableHighlight style={button_style(this.state.color)} 
+            <View style={square_style(this.state.currColor)}>
+                <TouchableHighlight style={button_style(this.state.currColor)} 
                     onPress= {(e) => this.colorNav(e)}>
                     <Text>
                     </Text>

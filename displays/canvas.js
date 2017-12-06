@@ -10,10 +10,6 @@ import Grid from './grid'
 var location = "Out of Range";
 var count;
 
-var selectedObject = {
-    index: -1
-}
-
 function isWithinRadius(x1, y1, x2, y2, r){
     var distance = Math.hypot((x2 - x1), (y2 - y1));
     if (distance <= r)
@@ -26,8 +22,8 @@ export default class Canvas extends Component {
                         title=""
                     />
                     */
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             latitude: null,
@@ -64,21 +60,22 @@ export default class Canvas extends Component {
                 distanceFilter: 3,           
             },
         );
-        if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.bruinBear.latitude, this.state.bruinBear.longitude, this.state.bruinBear.radius))
+
+        //TODO: Make sure that location global variable actually gets set to right thing
+        /*if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.bruinBear.latitude, this.state.bruinBear.longitude, this.state.bruinBear.radius))
             location = "BruinBear";
-        /*else if (isWithinRadius(latitude, longitude, boelter.latitude, boelter.longitude, boelter.radius))
-            location = "Boelter";
-        else if (isWithinRadius(latitude,longitude, sculptureGarden.latitude, sculptureGarden.longitude, sculptureGarden.radius))
-            location = "Sculpture Garden";
-        else if(isWithinRadius(latitude, longitude, sproulHall.latitude, sproulHall.longitude, sproulHall.radius))
-            location = "Sproul Hall";
-        else if(isWithinRadius(latitude, longitude, janssSteps.latitude, janssSteps.longitude, janssSteps.radius))
-            location = "Janss Steps";*/
+        else if (isWithinRadius(this.state.latitude, this.state.longitude, this.state.boelter.latitude, this.state.boelter.longitude, this.state.boelter.radius))
+            location = "BoelterHall";
+        else if (isWithinRadius(this.state.latitude,this.state.longitude, this.state.sculptureGarden.latitude, this.state.sculptureGarden.longitude, this.state.sculptureGarden.radius))
+            location = "SculptureGarden";
+        else if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.sproulHall.latitude, this.state.sproulHall.longitude, this.state.sproulHall.radius))
+            location = "SproulHall";
+        else if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.janssSteps.latitude, this.state.janssSteps.longitude, this.state.janssSteps.radius))
+            location = "JanssSteps";*/
     }
     
     componentDidMount() {
         this.queryDB();
-
     }
 
     componentWillUnmount() {
@@ -93,13 +90,40 @@ export default class Canvas extends Component {
     //SPROUL HALL (ID 4): 34.072153, -118.449949 to 34.071781, -118.450281 
     //JANSS STEPS (ID 5): 34.072169, -118.443119 to 34.072171, -118.443722
 
+    /*changeColor(color){
+        this.refs.grid.colorChange(color)
+    }*/
+
     timeup(){
         count = true;
     }
 
+    //Accepts "rrr-ggg-bbb" as three integer RGB values
+    //Returns "#rrggbb" as a hex code
+    parseRGBDatabaseEntryToObject(RGBstring)
+    {
+        var RGBarr = RGBstring.split("-");
+        if (RGBarr.length != 3) return "#000000";
+        
+        var R = parseInt(RGBarr[0]).toString(16);
+        if(R.length == 1)
+            R = '0' + R;
+        
+        var G = parseInt(RGBarr[1]).toString(16);
+        if(G.length == 1)
+            G = '0' + G;
+            
+        var B = parseInt(RGBarr[2]).toString(16);
+        if(B.length == 1)
+            B = '0' + B;
+        
+        return "#" + R + G + B; 
+    };
+
     async queryDB() {
+        location ='BruinBear'
         try {
-            let response = await fetch('http://169.232.244.139:3000/grids/lookup/BruinBear.json', 
+            var response = await fetch('http://169.232.244.139:3000/grids/lookup/' + location+ '.json', 
                 //deploy backend to heroku and call get URL  
                 {
                 method: 'GET',
@@ -109,66 +133,47 @@ export default class Canvas extends Component {
                 }
             }
         )
-        let responseJson = await response.json();
-        //alert(responseJson[3]);
+        //alert("This is the response: " + response)
+        var responseJson = await response.json();
+
+        //loop through responseJson
+        for (i = 0; i < 400; i++)
+        {
+            responseJson[i] = this.parseRGBDatabaseEntryToObject(responseJson[i])
+        }
+        
+        
         this.setState({
             colors: responseJson
         }) 
+
         } catch(error){
             alert(error);
         }
     }
 
-    /*colorNavigate(){
-        if(count == false){
-            alert('Cannot select color yet');
-        }
-        else {
-            this.props.navigation.navigate('Color',{form: 'color'})
-        }
-    }*/
 
     render() {
         count = false;
-        var buttons = [];
         var columns = [];
-       /* for(let j = 0; j < 20; j++){
-            buttons.push(
-               /* <View style={styles.square} key={i}>
-                    <TouchableHighlight style={styles.buttonStyle} 
-                        onPress= {() =>  this.colorNavigate()}>
-                        <Text>
-                        </Text>
-                    </TouchableHighlight> 
-                </View>
-                <Grid key ={j} row = {j} navigation={this.props.navigation}
-                />
-            )
-        }//Make buttons*/
+        var buttons = [];        
         
-        /*for(let i = 0; i < 20; i++){
-            columns.push (
-                <View flexDirection='column' key={i} column={i}>
-                    { buttons }
-                </View>
-            )
-        }*/
-
-        for(let i = 0; i < 20; i++){
-            for(let j = 0; j < 20; j++){
-                buttons.push(
-                    <Grid key={j*20+i} id={j*20+i} navigation={this.props.navigation}/>
-                )
+        if(this.state.colors != '')
+        {
+            for(let i = 0; i < 20; i++){
+                for(let j = 0; j < 20; j++){
+                    var str = this.state.colors[j*20+i];
+                    buttons.push(
+                        <Grid ref="grid" key={j*20+i} id={j*20+i} color={str} navigation={this.props.navigation}/>
+                    )
+                }
             }
         }
+        else
+        {
+            buttons = null;
+        }
 
-
-        /*for(let i = 0; i < 20; i++){
-            for(let j = 0; j < 20; j++){
-                index = i*20+j
-                columns[i][j].colorChange()
-            }
-        }*/
 
 
         return (
@@ -210,6 +215,15 @@ export default class Canvas extends Component {
     }
 }
 
+square_style = function(color){
+    return{
+        width: 14,
+        height: 14,
+        backgroundColor: color,
+        borderColor:'black',        
+        borderWidth: 0.25,
+    }
+}
 
 const styles = StyleSheet.create({
     buttonChange: {
