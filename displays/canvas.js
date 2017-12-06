@@ -271,4 +271,5 @@ const styles = StyleSheet.create({
     },
 });
 export {count} ; 
+export {location}
 //export {columns};

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 import { ColorPicker, toHsv, fromHsv} from 'react-native-color-picker';
 import { NavigationActions } from 'react-navigation'
 import { index } from './grid'
+import { location } from './canvas';
 
 var selectedColor;
 
@@ -32,7 +33,7 @@ export default class Color extends Component{
     async updateDB(){
         try {
             //TODO: Make this response actually use location string to select appropriate db to update
-            let response = await fetch('http://169.232.244.139:3000/grids/colorupdate/BruinBear/' + index + '/' + selectedColor + '.json',
+            let response = await fetch('http://169.232.244.139:3000/grids/colorupdate/' + location + '/' + index + '/' + selectedColor + '.json',
             {
                 method: 'GET',
                 headers: {
