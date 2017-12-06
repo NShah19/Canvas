@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { ColorPicker, toHsv, fromHsv} from 'react-native-color-picker';
 import { NavigationActions } from 'react-navigation'
-
+import { index } from './grid'
 
 var selectedColor;
 
 //separate hsv values by slashes
 
 export default class Color extends Component{
-    //index = (this.props.navigation.state.params.row * 20) + this.props.navigation.state.params.col;
+    //index = (this.props.navigation.state.params.row    * 20) + this.props.navigation.state.params.col;
     constructor() {
         super();
         this.state = { 
@@ -23,33 +23,40 @@ export default class Color extends Component{
         this.setState({color})
     }
 
-    onButtonPress = () => {
-        //this.props.navigation.dispatch(NavigationActions.back())
-        this.props.navigation.navigate('Canvas',{form: 'canvas'})
-        selectedColor = fromHsv(this.state.color);
-        alert(selectedColor);
-        //alert(toHsv('white'))        
-    }
-
     async updateDB(){
         try {
-            let response = await fetch('http://localhost:3000/grids',
+            let response = await fetch('http://169.232.244.139:3000/grids/colorupdate/BruinBear/' + index + '/white.json',
             {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({firstParam: location, secondParam: index, thirdParam: this.state.color})
             }
         )
         let res = await response.json();
         this.setState({
             colors: res
         })
+        //alert(this.state.colors)
         } catch(error){
             alert(error);
         }
+    }
+
+    /*for(let i = 0; i < 20; i++){
+        for(let j = 0; j < 20; j++){
+            columns[i][j].colorChange(this.state.colors[i*20+j])
+        }
+    }*/
+
+    onButtonPress = () => {
+        //this.props.navigation.dispatch(NavigationActions.back())
+        this.props.navigation.navigate('Canvas',{form: 'canvas'})
+        selectedColor = fromHsv(this.state.color);
+        this.updateDB();
+        //alert(selectedColor);
+        //alert(toHsv('white'))        
     }
 
     render() {

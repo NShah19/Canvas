@@ -5,11 +5,14 @@ import selectedColor from './colors'
 import { fromHsv, toHsv } from 'react-native-color-picker'
 import { timer } from 'react-timer-hoc'
 import Grid from './grid'
-import colorChange from './grid'
 
 
 var location = "Out of Range";
 var count;
+
+var selectedObject = {
+    index: -1
+}
 
 function isWithinRadius(x1, y1, x2, y2, r){
     var distance = Math.hypot((x2 - x1), (y2 - y1));
@@ -73,6 +76,11 @@ export default class Canvas extends Component {
             location = "Janss Steps";*/
     }
     
+    componentDidMount() {
+        this.queryDB();
+
+    }
+
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchId)
     }
@@ -99,11 +107,10 @@ export default class Canvas extends Component {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 }
-                //body: JSON.stringify(location)
             }
         )
         let responseJson = await response.json();
-        alert(JSON.stringify(responseJson));
+        //alert(responseJson[3]);
         this.setState({
             colors: responseJson
         }) 
@@ -121,19 +128,11 @@ export default class Canvas extends Component {
         }
     }*/
 
-    setId= () => {
-        for(let i = 0; i < 25; i++){
-            for(let j = 0; j < 25; j++){
-                columns[i][j]
-            }
-        }
-    }
-
     render() {
         count = false;
         var buttons = [];
         var columns = [];
-        for(let i = 0; i < 20; i++){
+       /* for(let j = 0; j < 20; j++){
             buttons.push(
                /* <View style={styles.square} key={i}>
                     <TouchableHighlight style={styles.buttonStyle} 
@@ -141,23 +140,42 @@ export default class Canvas extends Component {
                         <Text>
                         </Text>
                     </TouchableHighlight> 
-                </View>*/
-                <Grid key ={i} navigation={this.props.navigation}
+                </View>
+                <Grid key ={j} row = {j} navigation={this.props.navigation}
                 />
             )
-        }//Make buttons
-        for(let j = 0; j < 20; j++){
+        }//Make buttons*/
+        
+        /*for(let i = 0; i < 20; i++){
             columns.push (
-                <View flexDirection='column' key={j}>
+                <View flexDirection='column' key={i} column={i}>
                     { buttons }
                 </View>
             )
+        }*/
+
+        for(let i = 0; i < 20; i++){
+            for(let j = 0; j < 20; j++){
+                buttons.push(
+                    <Grid key={j*20+i} id={j*20+i} navigation={this.props.navigation}/>
+                )
+            }
         }
+
+
+        /*for(let i = 0; i < 20; i++){
+            for(let j = 0; j < 20; j++){
+                index = i*20+j
+                columns[i][j].colorChange()
+            }
+        }*/
+
+
         return (
             <View style={styles.wrapper}>
                 <View >
                 <CountdownCircle
-                    seconds={10}
+                    seconds={2}
                     radius={30}
                     borderWidth={8}
                     color="#ff003f"
@@ -171,8 +189,8 @@ export default class Canvas extends Component {
                 </Text>
                 <Text>Latitude: {this.state.latitude}</Text>
                 <Text>Longitude: {this.state.longitude}</Text>
-                <View flexDirection='row'>
-                    { columns }
+                <View flexWrap="wrap" width={280} height={280}>
+                    { buttons }
                 </View>
                 <View padding = {20} flexDirection='row' alignItems='center'>
                 <Button
@@ -239,3 +257,4 @@ const styles = StyleSheet.create({
     },
 });
 export {count} ; 
+//export {columns};

@@ -6,22 +6,25 @@ class GridsController < ApplicationController
   def lookup
     respond_to do |format|
       @grid = Grid.find_by_location(params[:location])
-      #format.html 
       format.json {render json: @grid.colors, status: :ok, location: @grid }
     end
   end
 
-  #PUT /grids/colorupdate/:color
-  #PUT /grids/colorupdate/:color.json
+  #GET /grids/colorupdate/:location/:index/:color
+  #GET /grids/colorupdate/:location/:index/:color.json
   def colorupdate
       respond_to do |format|
-      if @grid.update(grid_params)
-        format.html { redirect_to @grid, notice: 'Grid was successfully updated.' }
-        format.json { render json: @grid.colors, status: :ok, location: @grid }
-      else
-        format.html { render :edit }
-        format.json { render json: @grid.errors, status: :unprocessable_entity }
-      end
+          @location = params[:location]
+          @index = params[:index].to_f
+          @color = params[:color]
+          @grid = Grid.find_by_location(@location)
+          @newColorArray = @grid.colors
+          @newColorArray[@index] = @color
+          
+          @grid.colors = @newColorArray
+          @grid.save
+          
+          format.json {render json: @grid.colors, status: :ok, location: @grid}
     end
   end
   
@@ -93,7 +96,7 @@ class GridsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_grid
-      @grid = Grid.find(params[:id])
+     @grid = Grid.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

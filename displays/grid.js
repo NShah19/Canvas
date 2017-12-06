@@ -3,34 +3,42 @@ import { Button, Text, StyleSheet, View , TouchableHighlight } from 'react-nativ
 import {selectedColor} from './colors'
 import {count} from './canvas'
 
+var index;
 
 export default class Grid extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
-            color: 'white'
+            color: 'white',
+            id: props.id
         }
     }
 
-    colorChange() {
+    colorNav(e) {
+        //alert("Row/Column/Index: " + row + "/" + col + "/" + index)
+
         if(count == false){
             alert('Cannot select color yet');
         } else{
-            this.props.navigation.navigate('Color',{form: 'color'})
-           // this.setState ({
-             //   color: selectedColor
-            //})
-            alert(selectedColor)
+            alert(this.state.id)
+            this.props.navigation.navigate('Color', {form: 'color', index: this.state.id})
+        this.setState ({
+            color: selectedColor
+        }) 
+            //alert(selectedColor)
         }
-       
     }
 
-    
+    setIndex(i, j){
+        index = i*20 + j;
+        alert(index);
+    }
+
     render() {
         return(
             <View style={square_style(this.color)} key={this.index}>
                 <TouchableHighlight style={button_style(this.state.color)} 
-                    onPress= {() =>  this.colorChange()}>
+                    onPress= {(e) => this.colorNav(e)}>
                     <Text>
                     </Text>
                 </TouchableHighlight> 
@@ -83,3 +91,5 @@ const styles = StyleSheet.create({
     
     });
 */
+
+export{index};
