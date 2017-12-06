@@ -19,7 +19,7 @@ export default class Grid extends Component {
         if(count == false){
             alert('Cannot select color yet');
         } else{
-            alert("This is this pixel's color: " + this.state.currColor);
+            //alert("This is this pixel's color: " + this.state.currColor);
             this.props.navigation.navigate('Color', {form: 'color', index: this.state.id})
         /*this.setState ({
             color: selectedColor

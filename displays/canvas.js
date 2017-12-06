@@ -12,6 +12,7 @@ var count;
 
 function isWithinRadius(x1, y1, x2, y2, r){
     var distance = Math.hypot((x2 - x1), (y2 - y1));
+    //alert("distance/x1/y1/x2/y2/r: " + distance + "/" + x1 + "/" + y1 + "/" + x2 + "/" + y2 + "/" + r);
     if (distance <= r)
         return true;
     return false;
@@ -31,9 +32,9 @@ export default class Canvas extends Component {
             error: null,
             colors: [],
             bruinBear: {latitude: 34.070988, longitude: -118.445003, radius: 0.000186097},
-            boelter: {latitude: 34.069069, longitude: -118.442955, radius: 0.00127966},
+            boelterHall: {latitude: 34.069069, longitude: -118.442955, radius: 0.00127966},
             sculptureGarden: {latitude: 34.075118, longitude: -118.439990, radius: 0.000935597},
-            sproulHall: {latitude: 34.072153, longitude: -118.449949, radius: 0.000498606},
+            sproulHall: {latitude: 34.07222181561782, longitude: -118.45063157390658, radius: 0.001006060},
             janssSteps: {latitude: 34.072169, longitude: -118.443119, radius: 0.000603003}
         }
     }
@@ -60,18 +61,6 @@ export default class Canvas extends Component {
                 distanceFilter: 3,           
             },
         );
-
-        //TODO: Make sure that location global variable actually gets set to right thing
-        /*if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.bruinBear.latitude, this.state.bruinBear.longitude, this.state.bruinBear.radius))
-            location = "BruinBear";
-        else if (isWithinRadius(this.state.latitude, this.state.longitude, this.state.boelter.latitude, this.state.boelter.longitude, this.state.boelter.radius))
-            location = "BoelterHall";
-        else if (isWithinRadius(this.state.latitude,this.state.longitude, this.state.sculptureGarden.latitude, this.state.sculptureGarden.longitude, this.state.sculptureGarden.radius))
-            location = "SculptureGarden";
-        else if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.sproulHall.latitude, this.state.sproulHall.longitude, this.state.sproulHall.radius))
-            location = "SproulHall";
-        else if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.janssSteps.latitude, this.state.janssSteps.longitude, this.state.janssSteps.radius))
-            location = "JanssSteps";*/
     }
     
     componentDidMount() {
@@ -121,34 +110,50 @@ export default class Canvas extends Component {
     };
 
     async queryDB() {
-        location ='BruinBear'
-        try {
-            var response = await fetch('http://169.232.244.139:3000/grids/lookup/' + location+ '.json', 
+        /*if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.bruinBear.latitude, this.state.bruinBear.longitude, this.state.bruinBear.radius))
+            location = "BruinBear";
+        else if (isWithinRadius(this.state.latitude, this.state.longitude, this.state.boelterHall.latitude, this.state.boelterHall.longitude, this.state.boelterHall.radius))
+            location = "BoelterHall";
+        else if (isWithinRadius(this.state.latitude,this.state.longitude, this.state.sculptureGarden.latitude, this.state.sculptureGarden.longitude, this.state.sculptureGarden.radius))
+            location = "SculptureGarden";
+        else if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.sproulHall.latitude, this.state.sproulHall.longitude, this.state.sproulHall.radius))
+            location = "SproulHall";
+        else if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.janssSteps.latitude, this.state.janssSteps.longitude, this.state.janssSteps.radius))
+            location = "JanssSteps";*/
+        //location = "BoelterHall"
+        if(location != 'Out of Range'){
+            try {
+                var response = await fetch('http://nameless-springs-89770.herokuapp.com/grids/lookup/' + location+ '.json', 
                 //deploy backend to heroku and call get URL  
-                {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
                 }
+            )
+            //alert("This is the response: " + response)
+            var responseJson = await response.json();
+
+            //loop through responseJson
+            for (i = 0; i < 400; i++)
+            {
+                responseJson[i] = this.parseRGBDatabaseEntryToObject(responseJson[i])
             }
-        )
-        //alert("This is the response: " + response)
-        var responseJson = await response.json();
+        
+        
+            this.setState({
+                colors: responseJson
+            }) 
 
-        //loop through responseJson
-        for (i = 0; i < 400; i++)
-        {
-            responseJson[i] = this.parseRGBDatabaseEntryToObject(responseJson[i])
+            } catch(error){
+                alert(error);
+            }
         }
-        
-        
-        this.setState({
-            colors: responseJson
-        }) 
-
-        } catch(error){
-            alert(error);
+        else {
+            alert("No Canvas in Range of this Location!")
+            this.props.navigation.navigate('Login',{form: 'login'})
         }
     }
 

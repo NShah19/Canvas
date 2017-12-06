@@ -33,7 +33,7 @@ export default class Color extends Component{
     async updateDB(){
         try {
             //TODO: Make this response actually use location string to select appropriate db to update
-            let response = await fetch('http://169.232.244.139:3000/grids/colorupdate/' + location + '/' + index + '/' + selectedColor + '.json',
+            let response = await fetch('http://nameless-springs-89770.herokuapp.com/grids/colorupdate/' + location + '/' + index + '/' + selectedColor + '.json',
             {
                 method: 'GET',
                 headers: {
