@@ -110,7 +110,7 @@ export default class Canvas extends Component {
     };
 
     async queryDB() {
-        /*if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.bruinBear.latitude, this.state.bruinBear.longitude, this.state.bruinBear.radius))
+        if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.bruinBear.latitude, this.state.bruinBear.longitude, this.state.bruinBear.radius))
             location = "BruinBear";
         else if (isWithinRadius(this.state.latitude, this.state.longitude, this.state.boelterHall.latitude, this.state.boelterHall.longitude, this.state.boelterHall.radius))
             location = "BoelterHall";
@@ -119,8 +119,8 @@ export default class Canvas extends Component {
         else if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.sproulHall.latitude, this.state.sproulHall.longitude, this.state.sproulHall.radius))
             location = "SproulHall";
         else if(isWithinRadius(this.state.latitude, this.state.longitude, this.state.janssSteps.latitude, this.state.janssSteps.longitude, this.state.janssSteps.radius))
-            location = "JanssSteps";*/
-        //location = "BoelterHall"
+            location = "JanssSteps";
+            
         if(location != 'Out of Range'){
             try {
                 var response = await fetch('http://nameless-springs-89770.herokuapp.com/grids/lookup/' + location+ '.json', 
@@ -185,7 +185,7 @@ export default class Canvas extends Component {
             <View style={styles.wrapper}>
                 <View >
                 <CountdownCircle
-                    seconds={2}
+                    seconds={300}
                     radius={30}
                     borderWidth={8}
                     color="#ff003f"
@@ -197,8 +197,6 @@ export default class Canvas extends Component {
                 <Text style={styles.title}>
                     Choose your Pixel!
                 </Text>
-                <Text>Latitude: {this.state.latitude}</Text>
-                <Text>Longitude: {this.state.longitude}</Text>
                 <View flexWrap="wrap" width={280} height={280}>
                     { buttons }
                 </View>
